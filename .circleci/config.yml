@@ -4,9 +4,49 @@ orbs:
   azure-cli: circleci/azure-cli@1.0.0
 
 jobs:
-  build:
+
+  build-11:
     docker:
-      - image: 'citus/extbuilder-13:latest'
+      - image: 'heisenberg302/extbuilder:11.9'
+    steps:
+      - checkout
+      - run:
+          name: 'Configure, Build, and Install'
+          command: build-ext
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  build-12:
+    docker:
+      - image: 'heisenberg302/extbuilder:12.4'
+    steps:
+      - checkout
+      - run:
+          name: 'Configure, Build, and Install'
+          command: build-ext
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  build-11-12:
+    docker:
+      - image: 'heisenberg302/extbuilder:12.4'
+    steps:
+      - checkout
+      - run:
+          name: 'Configure, Build, and Install'
+          command: build-ext
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  build-13:
+    docker:
+      - image: 'heisenberg302/extbuilder:13beta'
     steps:
       - checkout
       - run:
@@ -15,6 +55,20 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: [.]
+
+  build-12-13:
+    docker:
+      - image: 'heisenberg302/extbuilder:13beta'
+    steps:
+      - checkout
+      - run:
+          name: 'Configure, Build, and Install'
+          command: build-ext
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
   check-style:
     docker:
       - image: 'citus/stylechecker:latest'
@@ -69,7 +123,7 @@ jobs:
           command: ci/check_sql_snapshots.sh
   test-11_check-multi:
     docker:
-      - image: 'citus/exttester-11:latest'
+      - image: 'heisenberg302/exttester:11.9'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -85,7 +139,7 @@ jobs:
 
   test-11_check-vanilla:
     docker:
-      - image: 'citus/exttester-11:latest'
+      - image: 'heisenberg302/exttester:11.9'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -99,7 +153,7 @@ jobs:
 
   test-11_check-mx:
     docker:
-      - image: 'citus/exttester-11:latest'
+      - image: 'heisenberg302/exttester:11.9'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -113,7 +167,7 @@ jobs:
 
   test-11_check-worker:
     docker:
-      - image: 'citus/exttester-11:latest'
+      - image: 'heisenberg302/exttester:11.9'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -127,7 +181,7 @@ jobs:
 
   test-11_check-isolation:
     docker:
-      - image: 'citus/exttester-11:latest'
+      - image: 'heisenberg302/exttester:11.9'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -140,7 +194,7 @@ jobs:
           flags: 'test_11,isolation'
   test-11_check-follower-cluster:
     docker:
-      - image: 'citus/exttester-11:latest'
+      - image: 'heisenberg302/exttester:11.9'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -163,7 +217,7 @@ jobs:
           path: '/tmp/core_dumps'
   test-11_check-failure:
     docker:
-      - image: 'citus/failtester-11:latest'
+      - image: 'heisenberg302/failtester:11.9'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -325,7 +379,7 @@ jobs:
 
   test-13_check-multi:
     docker:
-      - image: 'citus/exttester-13:latest'
+      - image: 'heisenberg302/exttester:13beta'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -339,7 +393,7 @@ jobs:
 
   test-13_check-mx:
     docker:
-      - image: 'citus/exttester-13:latest'
+      - image: 'heisenberg302/exttester:13beta'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -353,7 +407,7 @@ jobs:
 
   test-13_check-vanilla:
     docker:
-      - image: 'citus/exttester-13:latest'
+      - image: 'heisenberg302/exttester:13beta'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -367,7 +421,7 @@ jobs:
 
   test-13_check-worker:
     docker:
-      - image: 'citus/exttester-13:latest'
+      - image: 'heisenberg302/exttester:13beta'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -381,7 +435,7 @@ jobs:
 
   test-13_check-isolation:
     docker:
-      - image: 'citus/exttester-13:latest'
+      - image: 'heisenberg302/exttester:13beta'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -395,7 +449,7 @@ jobs:
 
   test-13_check-follower-cluster:
     docker:
-      - image: 'citus/exttester-13:latest'
+      - image: 'heisenberg302/exttester:13beta'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -419,7 +473,7 @@ jobs:
 
   test-13_check-failure:
     docker:
-      - image: 'citus/failtester-13:latest'
+      - image: 'heisenberg302/failtester:13beta'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -478,71 +532,87 @@ workflows:
               ignore:
                 - /release-[0-9]+\.[0-9]+.*/ # match with releaseX.Y.*
 
-      - build
+
+      - build-11
+      - build-12
+      - build-13
+
+      - build-11-12:
+          requires:
+            - build-11
+
+      - build-12-13:
+          requires:
+            - build-12
+
+
       - check-style
       - check-sql-snapshots
 
       - test-11_check-multi:
-          requires: [build]
+          requires: [build-11]
       - test-11_check-vanilla:
-          requires: [build]
+          requires: [build-11]
       - test-11_check-isolation:
-          requires: [build]
+          requires: [build-11]
       - test-11_check-mx:
-          requires: [build]
+          requires: [build-11]
       - test-11_check-worker:
-          requires: [build]
+          requires: [build-11]
       - test-11_check-follower-cluster:
-          requires: [build]
+          requires: [build-11]
       - test-11_check-failure:
-          requires: [build]
+          requires: [build-11]
 
       - test-12_check-multi:
-          requires: [build]
+          requires: [build-12]
       - test-12_check-vanilla:
-          requires: [build]
+          requires: [build-12]
       - test-12_check-isolation:
-          requires: [build]
+          requires: [build-12]
       - test-12_check-mx:
-          requires: [build]
+          requires: [build-12]
       - test-12_check-worker:
-          requires: [build]
+          requires: [build-12]
       - test-12_check-follower-cluster:
-          requires: [build]
+          requires: [build-12]
       - test-12_check-failure:
-          requires: [build]
+          requires: [build-12]
 
       - test-13_check-multi:
-          requires: [build]
+          requires: [build-13]
       - test-13_check-vanilla:
-          requires: [build]
+          requires: [build-13]
       - test-13_check-isolation:
-          requires: [build]
+          requires: [build-13]
       - test-13_check-mx:
-          requires: [build]
+          requires: [build-13]
       - test-13_check-worker:
-          requires: [build]
+          requires: [build-13]
       - test-13_check-follower-cluster:
-          requires: [build]
+          requires: [build-13]
       - test-13_check-failure:
-          requires: [build]
+          requires: [build-13]
 
       - test-11-12_check-pg-upgrade:
-          requires: [build]
+          requires:
+            - build-11-12
+
       - test-12-13_check-pg-upgrade:
-          requires: [build]
+          requires:
+            - build-12-13
 
       - test-11_check-citus-upgrade:
-          requires: [build]
+          requires: [build-11]
 
       - ch_benchmark:
-          requires: [build]
+          requires: [build-13]
           filters:
             branches:
               only:
                 - /ch_benchmark\/.*/ # match with ch_benchmark/ prefix
       - tpcc_benchmark:
-          requires: [build]
+          requires: [build-13]
           filters:
             branches:
               only:
