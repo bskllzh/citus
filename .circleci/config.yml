@@ -199,7 +199,7 @@ jobs:
 
   test-12_check-multi:
     docker:
-      - image: 'citus/exttester-12:latest'
+      - image: 'heisenberg302/exttester:12.4'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -212,7 +212,7 @@ jobs:
           flags: 'test_12,multi'
   test-12_check-vanilla:
     docker:
-      - image: 'citus/exttester-12:latest'
+      - image: 'heisenberg302/exttester:12.4'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -226,7 +226,7 @@ jobs:
 
   test-12_check-mx:
     docker:
-      - image: 'citus/exttester-12:latest'
+      - image: 'heisenberg302/exttester:12.4'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -240,7 +240,7 @@ jobs:
 
   test-12_check-isolation:
     docker:
-      - image: 'citus/exttester-12:latest'
+      - image: 'heisenberg302/exttester:12.4'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -254,7 +254,7 @@ jobs:
 
   test-12_check-worker:
     docker:
-      - image: 'citus/exttester-12:latest'
+      - image: 'heisenberg302/exttester:12.4'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -268,7 +268,7 @@ jobs:
 
   test-12_check-follower-cluster:
     docker:
-      - image: 'citus/exttester-12:latest'
+      - image: 'heisenberg302/exttester:12.4'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
@@ -292,7 +292,7 @@ jobs:
 
   test-12_check-failure:
     docker:
-      - image: 'citus/failtester-12:latest'
+      - image: 'heisenberg302/failtester:12.4'
     working_directory: /home/circleci/project
     steps:
       - attach_workspace:
